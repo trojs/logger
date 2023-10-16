@@ -1,5 +1,5 @@
 import test from 'node:test'
-import assert from 'assert'
+import assert from 'node:assert'
 import { PubSub } from '@google-cloud/pubsub'
 import { getPubSubClient, getCredentials } from '../pubSubClient.js'
 

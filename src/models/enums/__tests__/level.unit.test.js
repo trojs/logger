@@ -1,5 +1,5 @@
 import test from 'node:test'
-import assert from 'assert'
+import assert from 'node:assert'
 import Level from '../level.js'
 
 test('Test the level enum', async (t) => {

@@ -1,5 +1,5 @@
 import test from 'node:test'
-import assert from 'assert'
+import assert from 'node:assert'
 import winston from 'winston'
 import { stub, createStubInstance } from 'sinon'
 import makeLoggers from '../index.js'
