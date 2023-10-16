@@ -1,6 +1,10 @@
 import { PubSub } from '@google-cloud/pubsub'
 
-const getCredentials = (credentials) => credentials.constructor === String ? JSON.parse(credentials) : credentials
+/**
+ * @param {string|object} credentials
+ * @returns {object}
+ */
+const getCredentials = (credentials) => credentials.constructor === String ? JSON.parse(credentials.toString()) : credentials
 
 const getPubSubClient = (projectId, credentials) => {
   if (!projectId || !credentials) {

@@ -19,12 +19,12 @@ const levels = {
 /**
  * Create the logger
  * @param {object} config
- * @param {Array} config.loggers
- * @param {string?} config.level
- * @param {object?} config.meta
+ * @param {Array=} config.loggers
+ * @param {string?=} config.level
+ * @param {object?=} config.meta
  * @returns {winston.Logger}
  */
-export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) => {
+export default ({ loggers = defaultLoggers, level = 'info', meta = {} }) => {
   const winstonLoggers = makeLoggers({ winston, loggers })
 
   return winston.createLogger({
