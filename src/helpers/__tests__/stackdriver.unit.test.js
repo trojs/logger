@@ -1,5 +1,5 @@
 import test from 'node:test'
-import assert from 'assert'
+import assert from 'node:assert'
 import stackdriver from '../stackdriver.js'
 
 test('Test the stackdriver helper', async (t) => {
