@@ -11,7 +11,8 @@
         "lint": "eslint src/*.js --config .eslintrc",
         "lint:report": "eslint src/*.js --config .eslintrc -f json -o report.json",
         "lint:fix": "eslint src/*.js --config .eslintrc --fix",
-        "test": "c8 node --test src/**/*.js",
+        "test": "c8 node --test src/",
+        "test:node21": "c8 node --test 'src/**/*.js'",
         "cpd": "node_modules/jscpd/bin/jscpd src",
         "vulnerabilities": "npm audit --omit=dev"
     },
