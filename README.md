@@ -1,5 +1,5 @@
 # logger
-Generic logger with intergrations for GCP, Sentry, New Relic, ...
+Generic logger with intergrations for GCP, Sentry, ...
 
 ```javascript
 import makeLogger from '@hckrnews/logger';
@@ -57,8 +57,6 @@ Types:
  * errorFile
  * combinedFile
  * console
- * googleCloud
- * newRelic
 
 The default loggers are overruled by the loggers in the `loggers` array.
 
@@ -96,39 +94,3 @@ More info:
 * location (default: combined.log)
 
 ## console
-
-## googleCloud
-
-* key (projectId)
-* credentials
-* location (keyFilename)
-* serverName (default: localhost, labels.name + serverContext.service)
-* release (default: unknown, labels.version + serverContext.version)
-* environment (default: production, labels.environment)
-
-You can set the credentials object to `credentials` or the credentials file to the `location`
-
-More info:
-
-* https://github.com/googleapis/nodejs-logging-winston
-* https://cloud.google.com/logging/docs/setup/nodejs
-
-## newRelic
-
-* key (default: undefined, licenseKey)
-* location (default: https://log-api.newrelic.com, apiKey)
-
-More info:
-
-* https://www.npmjs.com/package/winston-to-newrelic-logs
-
-## pubSubElastic
-| Property        | Description                                                    | Required | Default Value | Type             |
-|-----------------|----------------------------------------------------------------|----------|---------------|------------------|
-| **level**       | Logging level                                                  | No       | `trace`       | String           |
-| **projectId**   | GCP Project ID                                                 | Yes      | -             | String           |
-| **credentials** | Service Account to authenticate with GCP                       | Yes      | -             | String \| Object |
-| **topic**       | Topic where logs should be published to                        | Yes      | -             | String           |
-| **index**       | Name of the Elastic index which is attached to each event      | Yes      | -             | String           |
-| **maxMessages** | Max batch size before sending batch to PubSub                  | No       | `5`           | Number           |
-| **maxWaitTime** | Max time in milliseconds before logs are being send to PubSub  | No       | `5000`        | Number           |

@@ -1,7 +1,7 @@
 {
     "name": "@hckrnews/logger",
     "description": "Winston logger for Hckrnews",
-    "version": "0.1.3",
+    "version": "0.2.0",
     "author": {
         "name": "Pieter Wigboldus",
         "url": "https://hckr.news/"
@@ -27,11 +27,7 @@
         "src/loggers/sentry.js",
         "src/loggers/combined-file.js",
         "src/loggers/error-file.js",
-        "src/loggers/google-cloud.js",
-        "src/loggers/new-relic.js",
-        "src/loggers/pubsub-elastic.js",
-        "src/helpers/stackdriver.js",
-        "src/helpers/pubSubClient.js"
+        "src/helpers/stackdriver.js"
     ],
     "main": "src/logger.js",
     "devDependencies": {
@@ -46,7 +42,7 @@
         "eslint-plugin-promise": "^6.0.1",
         "eslint-plugin-sonarjs": "^0.21.0",
         "jscpd": "^3.2.1",
-        "sinon": "^16.1.0"
+        "sinon": "^17.0.0"
     },
     "repository": {
         "type": "git",
@@ -62,13 +58,9 @@
         "error"
     ],
     "dependencies": {
-        "@elastic/ecs-winston-format": "^1.3.1",
-        "@google-cloud/logging-winston": "^6.0.0",
-        "@google-cloud/pubsub": "^4.0.0",
         "@hckrnews/enum": "^2.0.1",
         "@hckrnews/mutator": "^0.3.2",
         "@hckrnews/objects": "^6.0.0",
-        "@newrelic/winston-enricher": "^4.0.1",
         "@sentry/integrations": "^7.36.0",
         "@sentry/node": "^7.36.0",
         "@sentry/tracing": "^7.36.0",
@@ -76,7 +68,6 @@
         "cors": "^2.8.5",
         "dotenv": "^16.0.3",
         "winston": "^3.8.2",
-        "winston-to-newrelic-logs": "^1.0.11",
         "winston-transport": "^4.5.0",
         "winston-transport-sentry-node": "^2.7.0"
     },
