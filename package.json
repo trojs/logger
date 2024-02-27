@@ -62,7 +62,7 @@
         "@hckrnews/mutator": "^0.3.2",
         "@hckrnews/objects": "^7.0.0",
         "@sentry/integrations": "^7.36.0",
-        "@sentry/node": "^7.36.0",
+        "@sentry/node": "^7.100.0",
         "@sentry/tracing": "^7.36.0",
         "compression": "^1.7.4",
         "cors": "^2.8.5",
