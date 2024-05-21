@@ -1,4 +1,4 @@
-import { Obj } from '@hckrnews/objects'
+import { Obj } from '@trojs/objects'
 import loggerSchema from './schemas/logger.js'
 import LoggerMutator from './mutators/logger.js'
 
