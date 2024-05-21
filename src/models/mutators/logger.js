@@ -1,4 +1,4 @@
-import DefaultMutator from '@hckrnews/mutator'
+import DefaultMutator from '@trojs/mutator'
 import LevelEnum from '../enums/level.js'
 
 /**

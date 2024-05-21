@@ -2,7 +2,7 @@
 Generic logger with intergrations for e.g. Sentry
 
 ```javascript
-import makeLogger from '@hckrnews/logger';
+import makeLogger from '@trojs/logger';
 
 const logger = makeLogger({
   level: 'info', 

@@ -1,17 +1,17 @@
 {
-    "name": "@hckrnews/logger",
-    "description": "Winston logger for Hckrnews",
-    "version": "0.3.4",
+    "name": "@trojs/logger",
+    "description": "Winston logger for TroJS",
+    "version": "0.4.0",
     "author": {
         "name": "Pieter Wigboldus",
-        "url": "https://hckr.news/"
+        "url": "https://trojs.org/"
     },
     "license": "MIT",
     "scripts": {
         "lint": "eslint src/*.js --config .eslintrc",
         "lint:report": "eslint src/*.js --config .eslintrc -f json -o report.json",
-        "lint:fix": "eslint src/*.js --config .eslintrc --fix",
-        "test": "c8 node --test src/",
+        "lint:fix": "eslint src/ --config .eslintrc --fix",
+        "test": "c8 node --test",
         "cpd": "node_modules/jscpd/bin/jscpd src",
         "vulnerabilities": "npm audit --omit=dev"
     },
@@ -31,7 +31,7 @@
     ],
     "main": "src/logger.js",
     "devDependencies": {
-        "@hckrnews/error": "^2.0.0",
+        "@trojs/error": "^3.0.0",
         "@hckrnews/eslint-config": "^3.0.0",
         "c8": "^9.0.0",
         "eslint": "^8.23.0",
@@ -41,8 +41,7 @@
         "eslint-plugin-n": "^16.6.2",
         "eslint-plugin-promise": "^6.0.1",
         "eslint-plugin-sonarjs": "^0.24.0",
-        "jscpd": "^3.2.1",
-        "sinon": "^17.0.0"
+        "jscpd": "^3.2.1"
     },
     "repository": {
         "type": "git",
@@ -58,9 +57,9 @@
         "error"
     ],
     "dependencies": {
-        "@hckrnews/enum": "^3.0.0",
-        "@hckrnews/mutator": "^0.3.2",
-        "@hckrnews/objects": "^7.0.0",
+        "@trojs/enum": "^3.0.0",
+        "@trojs/mutator": "^0.4.0",
+        "@trojs/objects": "^8.0.0",
         "@sentry/integrations": "^7.36.0",
         "@sentry/node": "^7.36.0",
         "@sentry/tracing": "^7.36.0",
