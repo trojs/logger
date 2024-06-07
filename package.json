@@ -62,7 +62,7 @@
         "@trojs/objects": "^8.0.0",
         "@sentry/integrations": "^7.36.0",
         "@sentry/node": "^7.36.0",
-        "@sentry/tracing": "^7.36.0",
+        "@sentry/tracing": "^7.116.0",
         "compression": "^1.7.4",
         "cors": "^2.8.5",
         "dotenv": "^16.0.3",
