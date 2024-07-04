@@ -40,7 +40,7 @@
         "eslint-plugin-jsdoc": "^48.0.6",
         "eslint-plugin-n": "^16.6.2",
         "eslint-plugin-promise": "^6.0.1",
-        "eslint-plugin-sonarjs": "^0.24.0",
+        "eslint-plugin-sonarjs": "^0.25.0",
         "jscpd": "^4.0.0"
     },
     "repository": {
@@ -61,7 +61,7 @@
         "@trojs/mutator": "^0.4.0",
         "@trojs/objects": "^8.0.0",
         "@sentry/integrations": "^7.117.0",
-        "@sentry/node": "^7.36.0",
+        "@sentry/node": "^7.117.0",
         "@sentry/tracing": "^7.36.0",
         "compression": "^1.7.4",
         "cors": "^2.8.5",
