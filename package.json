@@ -60,7 +60,7 @@
         "@trojs/enum": "^3.0.0",
         "@trojs/mutator": "^0.4.0",
         "@trojs/objects": "^8.0.0",
-        "@sentry/integrations": "^7.36.0",
+        "@sentry/integrations": "^7.117.0",
         "@sentry/node": "^7.117.0",
         "@sentry/tracing": "^7.36.0",
         "compression": "^1.7.4",
