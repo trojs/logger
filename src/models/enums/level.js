@@ -1,4 +1,4 @@
-import { Enum } from '@trojs/enum'
+import { Enum } from '@trojs/enum';
 
 /**
  * @typedef LevelType
@@ -17,10 +17,15 @@ import { Enum } from '@trojs/enum'
  * @enum { LevelType }
  */
 export default class Level extends Enum {
-  static info = 'info'
-  static fatal = 'fatal'
-  static error = 'error'
-  static warn = 'warn'
-  static debug = 'debug'
-  static trace = 'trace'
+    static info = 'info';
+
+    static fatal = 'fatal';
+
+    static error = 'error';
+
+    static warn = 'warn';
+
+    static debug = 'debug';
+
+    static trace = 'trace';
 }

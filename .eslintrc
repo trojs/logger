@@ -6,11 +6,12 @@
     },
     "root": true,
     "extends": [
-        "standard",
+        "@hckrnews/eslint-config",
         "plugin:import/recommended",
         "plugin:n/recommended",
         "plugin:jsdoc/recommended",
-        "plugin:sonarjs/recommended"
+        "plugin:sonarjs/recommended",
+        "plugin:prettier/recommended"
     ],
     "parserOptions": {
         "sourceType": "module",
@@ -33,6 +34,13 @@
         "webextensions": true
     },
     "rules": {
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "js": "always"
+            }
+        ],
         "block-scoped-var": "error",
         "complexity": [
             "error",
@@ -56,6 +64,12 @@
         "max-statements": [
             "warn",
             20
+        ],
+        "max-len": [
+            "warn",
+            {
+                "code": 120
+            }
         ],
         "linebreak-style": [
             "warn",
@@ -165,6 +179,10 @@
         ],
         "n/no-unpublished-import": "off",
         "n/no-unsupported-features/es-syntax": [
+            "off",
+            {}
+        ],
+        "n/no-unsupported-features/node-builtins": [
             "off",
             {}
         ],
