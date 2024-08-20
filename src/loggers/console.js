@@ -6,6 +6,7 @@ export default ({ winston, logger }) => {
     return new winston.transports.Console({
         level: logger?.level || defaultLevel,
         format: winston.format.combine(
+            winston.format.errors({ stack: logger?.debug ?? false }),
             winston.format(
                 stackDriver({ level: logger?.level, defaultLevel })
             )(),

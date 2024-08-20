@@ -94,3 +94,6 @@ More info:
 * location (default: combined.log)
 
 ## console
+
+* level (default: trace)
+* debug (default: false, stacktrace in console)
