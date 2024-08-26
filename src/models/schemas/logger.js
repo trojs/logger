@@ -18,6 +18,7 @@ import Level from '../enums/level.js';
  * @property {boolean?} debug
  * @property {number?} sampleRate
  * @property {number?} tracesSampleRate
+ * @property {string?} format
  */
 
 export default {
@@ -32,4 +33,5 @@ export default {
     'debug?': Boolean,
     'sampleRate?': Number,
     'tracesSampleRate?': Number,
+    'format?': String,
 };

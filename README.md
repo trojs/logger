@@ -97,3 +97,4 @@ More info:
 
 * level (default: trace)
 * debug (default: false, stacktrace in console)
+* format (default: simple, also possible to set to json which is useful for different log systems)
