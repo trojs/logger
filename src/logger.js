@@ -1,6 +1,12 @@
 import winston from 'winston';
 import makeLoggers from './loggers/index.js';
 
+/**
+ * @typedef {import('./models/schemas/logger.js').Logger} LoggerType
+ * @typedef {import('./models/enums/level.js').LevelType} LevelType
+ */
+
+/** @type {LoggerType[]} */
 const defaultLoggers = [
     {
         type: 'console',
@@ -19,7 +25,7 @@ const levels = {
 /**
  * Create the logger
  * @param {object} config
- * @param {Array=} config.loggers
+ * @param {LoggerType=} config.loggers
  * @param {string?=} config.level
  * @param {object?=} config.meta
  * @returns {winston.Logger}

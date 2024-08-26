@@ -6,9 +6,6 @@ import LoggerMutator from './mutators/logger.js';
  * @typedef {import('./schemas/logger.js').Logger} LoggerType
  */
 
-/**
- * @type {LoggerType}
- */
 const LoggerObject = Obj({ schema: loggerSchema });
 
 export default class Logger {
