@@ -14,6 +14,9 @@ export default ({ winston, logger }) => {
                       )(),
                       winston.format.json()
                   )
-                : undefined,
+                : winston.format.combine(
+                      winston.format.errors({ stack: logger?.debug ?? false }),
+                      winston.format.simple()
+                  ),
     });
 };
