@@ -36,7 +36,6 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {} }) => {
     return winston.createLogger({
         level,
         levels,
-        format: winston.format.json(),
         defaultMeta: meta,
         transports: winstonLoggers,
     });

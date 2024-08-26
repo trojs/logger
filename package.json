@@ -1,7 +1,7 @@
 {
     "name": "@trojs/logger",
     "description": "Winston logger for TroJS",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "author": {
         "name": "Pieter Wigboldus",
         "url": "https://trojs.org/"
