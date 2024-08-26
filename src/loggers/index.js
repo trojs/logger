@@ -12,6 +12,18 @@ const winstonLoggers = {
     console: makeConsoleLogger,
 };
 
+/**
+ * @typedef {import('../models/schemas/logger.js').Logger} LoggerType
+ * @typedef {import('winston-transport').TransportStreamOptions} TransportStream
+ */
+
+/**
+ * Create all loggers
+ * @param {object} opts
+ * @param {object} opts.winston
+ * @param {LoggerType[]} opts.loggers
+ * @returns {TransportStream[]}
+ */
 const makeLoggers = ({ winston, loggers }) =>
     Logger.createAll(loggers).map((logger) => {
         const loggerFn = winstonLoggers[logger.type];
