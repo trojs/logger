@@ -1,4 +1,4 @@
-import os from 'node:os';
+import os from 'node:os'
 
 const levelToSeverity = {
     trace: 'DEBUG',
@@ -6,8 +6,8 @@ const levelToSeverity = {
     info: 'INFO',
     warn: 'WARNING',
     error: 'ERROR',
-    fatal: 'CRITICAL',
-};
+    fatal: 'CRITICAL'
+}
 
 const levels = {
     trace: 10,
@@ -15,18 +15,18 @@ const levels = {
     info: 30,
     warn: 40,
     error: 50,
-    fatal: 60,
-};
+    fatal: 60
+}
 
 const stackdriver =
     ({ level, defaultLevel }) =>
-    (info) => ({
-        ...info,
-        severity: levelToSeverity[level] || levelToSeverity[defaultLevel],
-        level: levels[level] || levels[defaultLevel],
-        time: Date.now(),
-        pid: process.pid,
-        hostname: os.hostname(),
-    });
+        (info) => ({
+            ...info,
+            severity: levelToSeverity[level] || levelToSeverity[defaultLevel],
+            level: levels[level] || levels[defaultLevel],
+            time: Date.now(),
+            pid: process.pid,
+            hostname: os.hostname()
+        })
 
-export default stackdriver;
+export default stackdriver

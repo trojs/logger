@@ -1,4 +1,4 @@
 export default ({ winston, logger }) =>
     new winston.transports.File({
-        filename: logger?.location || 'combined.log',
-    });
+        filename: logger?.location || 'combined.log'
+    })
