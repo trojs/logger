@@ -1,4 +1,4 @@
-import Level from '../enums/level.js';
+import Level from '../enums/level.js'
 
 /**
  * @typedef {import('../enums/level.js').LevelType} LevelType
@@ -33,5 +33,5 @@ export default {
     'debug?': Boolean,
     'sampleRate?': Number,
     'tracesSampleRate?': Number,
-    'format?': String,
-};
+    'format?': String
+}

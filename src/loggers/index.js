@@ -1,16 +1,16 @@
-import makeErrorFileLogger from './error-file.js';
-import makeCombinedFileLogger from './combined-file.js';
-import makeSentryLogger from './sentry.js';
-import makeConsoleLogger from './console.js';
+import makeErrorFileLogger from './error-file.js'
+import makeCombinedFileLogger from './combined-file.js'
+import makeSentryLogger from './sentry.js'
+import makeConsoleLogger from './console.js'
 
-import Logger from '../models/logger.js';
+import Logger from '../models/logger.js'
 
 const winstonLoggers = {
     sentry: makeSentryLogger,
     errorFile: makeErrorFileLogger,
     combinedFile: makeCombinedFileLogger,
-    console: makeConsoleLogger,
-};
+    console: makeConsoleLogger
+}
 
 /**
  * @typedef {import('../models/schemas/logger.js').Logger} LoggerType
@@ -26,17 +26,17 @@ const winstonLoggers = {
  */
 const makeLoggers = ({ winston, loggers }) =>
     Logger.createAll(loggers).map((logger) => {
-        const loggerFn = winstonLoggers[logger.type];
+        const loggerFn = winstonLoggers[logger.type]
         if (!loggerFn) {
-            throw new Error(`Unknown logger type: ${logger.type}`);
+            throw new Error(`Unknown logger type: ${logger.type}`)
         }
 
         const opts = {
             logger,
-            winston,
-        };
+            winston
+        }
 
-        return loggerFn(opts);
-    });
+        return loggerFn(opts)
+    })
 
-export default makeLoggers;
+export default makeLoggers

@@ -1,4 +1,6 @@
-import { Enum } from '@trojs/enum';
+import { Enum } from '@trojs/enum'
+
+/* eslint-disable sonarjs/public-static-readonly */
 
 /**
  * @typedef LevelType
@@ -16,16 +18,18 @@ import { Enum } from '@trojs/enum';
  * @readonly
  * @enum { LevelType }
  */
-export default class Level extends Enum {
-    static info = 'info';
+class Level extends Enum {
+    static info = 'info'
 
-    static fatal = 'fatal';
+    static fatal = 'fatal'
 
-    static error = 'error';
+    static error = 'error'
 
-    static warn = 'warn';
+    static warn = 'warn'
 
-    static debug = 'debug';
+    static debug = 'debug'
 
-    static trace = 'trace';
+    static trace = 'trace'
 }
+
+export default Level
