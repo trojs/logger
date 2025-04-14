@@ -85,32 +85,28 @@ export class SentryTransport extends TransportStream {
 
     const sentryLevel = this.levelsMap[winstonLevel]
 
-    const scope = Sentry.getCurrentScope()
-    scope.clear()
+    Sentry.withScope((scope) => {
+      if (tags !== undefined && SentryTransport.isObject(tags)) {
+        scope.setTags(tags)
+      }
 
-    if (tags !== undefined && SentryTransport.isObject(tags)) {
-      scope.setTags(tags)
-    }
+      scope.setExtras(meta)
 
-    scope.setExtras(meta)
+      if (user !== undefined && SentryTransport.isObject(user)) {
+        scope.setUser(user)
+      }
 
-    if (user !== undefined && SentryTransport.isObject(user)) {
-      scope.setUser(user)
-    }
-
-    // Capturing Errors / Exceptions
-    if (SentryTransport.shouldLogException(sentryLevel)) {
-      const error
-        = Object.values(info).find((value) => value instanceof Error)
-          ?? new ExtendedError(info)
-      Sentry.captureException(error, { tags, level: sentryLevel })
-
-      return callback()
-    }
-
-    // Capturing Messages
-    Sentry.captureMessage(message, sentryLevel)
-    return callback()
+      // Capturing Errors / Exceptions
+      if (SentryTransport.shouldLogException(sentryLevel)) {
+        const error
+          = Object.values(info).find((value) => value instanceof Error)
+            ?? new ExtendedError(info)
+        Sentry.captureException(error, { tags, level: sentryLevel })
+      } else {
+        // Capturing Messages
+        Sentry.captureMessage(message, sentryLevel)
+      }
+    })
   }
 
   /**
