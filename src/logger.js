@@ -8,18 +8,18 @@ import makeLoggers from './loggers/index.js'
 
 /** @type {LoggerType[]} */
 const defaultLoggers = [
-    {
-        type: 'console'
-    }
+  {
+    type: 'console'
+  }
 ]
 
 const levels = {
-    fatal: 0,
-    error: 1,
-    warn: 2,
-    info: 3,
-    debug: 4,
-    trace: 5
+  fatal: 0,
+  error: 1,
+  warn: 2,
+  info: 3,
+  debug: 4,
+  trace: 5
 }
 
 /**
@@ -31,12 +31,12 @@ const levels = {
  * @returns {winston.Logger}
  */
 export default ({ loggers = defaultLoggers, level = 'info', meta = {} }) => {
-    const winstonLoggers = makeLoggers({ winston, loggers })
+  const winstonLoggers = makeLoggers({ winston, loggers })
 
-    return winston.createLogger({
-        level,
-        levels,
-        defaultMeta: meta,
-        transports: winstonLoggers
-    })
+  return winston.createLogger({
+    level,
+    levels,
+    defaultMeta: meta,
+    transports: winstonLoggers
+  })
 }

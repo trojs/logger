@@ -22,16 +22,16 @@ import Level from '../enums/level.js'
  */
 
 export default {
-    type: String,
-    'location?': String,
-    'level?': Level,
-    'key?': String,
-    'credentials?': Object,
-    'environment?': String,
-    'serverName?': String,
-    'release?': String,
-    'debug?': Boolean,
-    'sampleRate?': Number,
-    'tracesSampleRate?': Number,
-    'format?': String
+  type: String,
+  'location?': String,
+  'level?': Level,
+  'key?': String,
+  'credentials?': Object,
+  'environment?': String,
+  'serverName?': String,
+  'release?': String,
+  'debug?': Boolean,
+  'sampleRate?': Number,
+  'tracesSampleRate?': Number,
+  'format?': String
 }
