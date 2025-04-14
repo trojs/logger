@@ -71,7 +71,7 @@ export class SentryTransport extends TransportStream {
    * Logs the message to Sentry.
    * @param {object} info - Log information.
    * @param {Function} callback - Callback function.
-   * @returns {any}
+   * @returns {void}
    */
   log (info, callback) {
     setImmediate(() => {
@@ -85,7 +85,7 @@ export class SentryTransport extends TransportStream {
 
     const sentryLevel = this.levelsMap[winstonLevel]
 
-    Sentry.withScope((scope) => {
+    return Sentry.withScope((scope) => {
       if (tags !== undefined && SentryTransport.isObject(tags)) {
         scope.setTags(tags)
       }
