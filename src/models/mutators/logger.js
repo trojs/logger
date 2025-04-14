@@ -6,9 +6,9 @@ import LevelEnum from '../enums/level.js'
  * @augments DefaultMutator
  */
 class Logger extends DefaultMutator {
-    setLevelAttribute(level) {
-        return LevelEnum.fromKey(level)
-    }
+  setLevelAttribute (level) {
+    return LevelEnum.fromKey(level)
+  }
 }
 
 export default Logger

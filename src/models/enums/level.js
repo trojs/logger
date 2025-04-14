@@ -19,17 +19,17 @@ import { Enum } from '@trojs/enum'
  * @enum { LevelType }
  */
 class Level extends Enum {
-    static info = 'info'
+  static info = 'info'
 
-    static fatal = 'fatal'
+  static fatal = 'fatal'
 
-    static error = 'error'
+  static error = 'error'
 
-    static warn = 'warn'
+  static warn = 'warn'
 
-    static debug = 'debug'
+  static debug = 'debug'
 
-    static trace = 'trace'
+  static trace = 'trace'
 }
 
 export default Level
