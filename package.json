@@ -1,17 +1,19 @@
 {
     "name": "@trojs/logger",
     "description": "Winston logger for TroJS",
-    "version": "0.5.2",
+    "version": "0.6.0",
     "author": {
         "name": "Pieter Wigboldus",
         "url": "https://trojs.org/"
     },
     "license": "MIT",
     "scripts": {
-        "lint": "eslint src/*.js --config .eslintrc",
-        "lint:report": "eslint src/*.js --config .eslintrc -f json -o report.json",
-        "lint:fix": "eslint src/ --config .eslintrc --fix",
-        "test": "c8 node --test",
+        "lint": "eslint",
+        "lint:report": "eslint src/*.js -f json -o report.json",
+        "lint:fix": "eslint --fix",
+        "lint:rules": "eslint --print-config file.js > eslintconfig.json",
+        "test": "node --test --experimental-test-coverage --test-reporter=spec --test-reporter=lcov --test-reporter-destination=stdout --test-reporter-destination=./coverage/lcov.info",
+        "test:watch": "node --watch --test --experimental-test-coverage --test-reporter=spec --test-reporter=lcov --test-reporter-destination=stdout --test-reporter-destination=./coverage/lcov.info",
         "cpd": "node_modules/jscpd/bin/jscpd src",
         "vulnerabilities": "npm audit --omit=dev"
     },
@@ -31,20 +33,10 @@
     ],
     "main": "src/logger.js",
     "devDependencies": {
-        "@hckrnews/eslint-config": "^3.0.0",
         "@trojs/error": "^4.0.0",
-        "c8": "^10.0.0",
-        "eslint": "^8.23.0",
-        "eslint-config-airbnb-base": "^15.0.0",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-html": "^8.1.1",
-        "eslint-plugin-import": "^2.29.1",
-        "eslint-plugin-jsdoc": "^50.0.0",
-        "eslint-plugin-jsx-a11y": "^6.9.0",
-        "eslint-plugin-n": "^17.9.0",
-        "eslint-plugin-prettier": "^5.2.1",
-        "eslint-plugin-promise": "^7.0.0",
-        "eslint-plugin-sonarjs": "^0.25.1",
+        "@trojs/lint": "^0.2.13",
+        "eslint": "^9.24.0",
+        "globals": "^16.0.0",
         "jscpd": "^4.0.0",
         "prettier": "^3.3.3"
     },
