@@ -45,7 +45,7 @@
         "url": "https://github.com/trojs/logger"
     },
     "engines": {
-        "node": ">= 18.13"
+        "node": ">= 20"
     },
     "keywords": [
         "javascript",
