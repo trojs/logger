@@ -1,6 +1,4 @@
-import SentryPackage from 'winston-transport-sentry-node'
-
-const Sentry = SentryPackage?.default || SentryPackage
+import { SentryTransport } from './winston-transport-sentry-node.js'
 
 export default ({ logger }) => {
   const options = {
@@ -16,5 +14,5 @@ export default ({ logger }) => {
     level: logger?.level || 'info'
   }
 
-  return new Sentry(options)
+  return new SentryTransport(options)
 }
