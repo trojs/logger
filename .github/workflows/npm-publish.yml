@@ -29,9 +29,15 @@ jobs:
       - run: npm ci --production
       - name: Get branch for tag
         id: get_branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           TAG_NAME="${GITHUB_REF#refs/tags/}"
-          BRANCH=$(git branch -r --contains "refs/tags/$TAG_NAME" | grep -v '\->' | head -n 1 | sed 's|origin/||' | xargs)
+          REPO="${GITHUB_REPOSITORY}"
+          # Get the commit SHA for the tag
+          TAG_SHA=$(gh api repos/$REPO/git/refs/tags/$TAG_NAME --jq .object.sha)
+          # Find the first branch containing this commit
+          BRANCH=$(git branch -r --contains "$TAG_SHA" | grep -v '\->' | head -n 1 | sed 's|origin/||' | xargs)
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
 
       - name: Set version from tag
@@ -42,8 +48,8 @@ jobs:
           TAG=${TAG#v}
           git fetch origin ${{ steps.get_branch.outputs.branch }}
           git checkout ${{ steps.get_branch.outputs.branch }}
-          git reset --hard "refs/tags/${TAG}" # <-- Ensure code matches the tag
-          git pull
+          git reset --hard "refs/tags/${TAG}" # Ensure code matches the tag
+          git pull origin ${{ steps.get_branch.outputs.branch }}
           npm version $TAG --no-git-tag-version
           git add package.json package-lock.json
           git commit -m "ci: set version to $TAG [skip ci]" || true
