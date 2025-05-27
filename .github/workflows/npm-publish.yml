@@ -36,6 +36,8 @@ jobs:
           REPO="${GITHUB_REPOSITORY}"
           # Get the commit SHA for the tag
           TAG_SHA=$(gh api repos/$REPO/git/refs/tags/$TAG_NAME --jq .object.sha)
+          # Fetch all branches and tags so we can search
+          git fetch --all --tags
           # Find the first branch containing this commit
           BRANCH=$(git branch -r --contains "$TAG_SHA" | grep -v '\->' | head -n 1 | sed 's|origin/||' | xargs)
           echo "branch=$BRANCH" >> $GITHUB_OUTPUT
