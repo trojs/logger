@@ -42,6 +42,7 @@ jobs:
           TAG=${TAG#v}
           git fetch origin ${{ steps.get_branch.outputs.branch }}
           git checkout ${{ steps.get_branch.outputs.branch }}
+          git reset --hard "refs/tags/${TAG}" # <-- Ensure code matches the tag
           git pull
           npm version $TAG --no-git-tag-version
           git add package.json package-lock.json
