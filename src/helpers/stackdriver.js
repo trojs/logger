@@ -25,8 +25,8 @@ const stackdriver
 
       return {
         ...info,
-        severity: levelToSeverity[currentLevel] || levelToSeverity[defaultLevel ?? 'info'] || levelToSeverity.info,
-        level: levels[currentLevel] || levels[defaultLevel ?? 'info'] || levels.info,
+        severity: levelToSeverity[currentLevel] || levelToSeverity.info,
+        level: levels[currentLevel] || levels.info,
         time: Date.now(),
         pid: process.pid,
         hostname: os.hostname()
