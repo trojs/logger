@@ -7,11 +7,18 @@ export default ({ winston, logger }) => {
     winston.format.errors({ stack: logger?.debug ?? false }),
     winston.format((info) => {
       if (!info.message) {
-        info.message = info instanceof Error
-          ? info.toString()
-          : JSON.stringify(info)
+        if (info instanceof Error) {
+          // Prefer the raw message; fall back to toString
+          info.message = info.message || info.toString()
+        } else {
+          // Avoid {"level":"error"} as a message if level is the only key
+          const clone = { ...info }
+          delete clone.level
+          const keys = Object.keys(clone)
+          info.message = keys.length > 0 ? JSON.stringify(clone) : ''
+        }
       } else if (info.message instanceof Error) {
-        info.message = info.message.toString()
+        info.message = info.message.message || info.message.toString()
       } else if (typeof info.message !== 'string') {
         info.message = JSON.stringify(info.message)
       }

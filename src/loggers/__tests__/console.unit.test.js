@@ -143,7 +143,7 @@ test('Test the console logger', async (t) => {
     })
     const infoObj = { level: 'info', foo: 'bar', answer: 42 }
     const formatted = transport.format.transform(infoObj, {})
-    assert.strictEqual(formatted.message, '{"level":"info","foo":"bar","answer":42}')
+    assert.strictEqual(formatted.message, '{"foo":"bar","answer":42}')
   })
 
   await t.test('It should transform message Error instance (json format)', () => {
