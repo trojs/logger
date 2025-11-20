@@ -124,4 +124,25 @@ test('Test the console logger', async (t) => {
     assert.ok(formatted.stacktrace)
     assert.strictEqual(formatted.message, 'missing stack?')
   })
+
+  await t.test('It should set Error message using toString() (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', debug: true, level: 'error' }
+    })
+    const err = new Error('custom boom')
+    err.level = 'error'
+    const formatted = transport.format.transform(err, {})
+    assert.strictEqual(formatted.message, 'custom boom')
+  })
+
+  await t.test('It should JSON stringify plain object without message (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', debug: true, level: 'info' }
+    })
+    const infoObj = { level: 'info', foo: 'bar', answer: 42 }
+    const formatted = transport.format.transform(infoObj, {})
+    assert.strictEqual(formatted.message, '{"level":"info","foo":"bar","answer":42}')
+  })
 })
