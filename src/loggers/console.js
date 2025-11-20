@@ -11,15 +11,23 @@ export default ({ winston, logger }) => {
     winston.format.json()
   )
 
+  const simpleLoggerWithStack = winston.format.printf((info) => {
+    if (logger?.debug && info.stack) {
+      return `${info.level}: ${info.stack}`
+    }
+    return `${info.level}: ${info.message}`
+  })
+
   const defaultFormatter = winston.format.combine(
     winston.format.errors({ stack: logger?.debug ?? false }),
-    winston.format.simple()
+    simpleLoggerWithStack
   )
+
   return new winston.transports.Console({
     level: logger?.level || defaultLevel,
     format:
-            logger.format === 'json'
-              ? jsonFormatter
-              : defaultFormatter
+    logger.format === 'json'
+      ? jsonFormatter
+      : defaultFormatter
   })
 }
