@@ -6,11 +6,10 @@ export default ({ winston, logger }) => {
   const jsonFormatter = winston.format.combine(
     winston.format.errors({ stack: logger?.debug ?? false }),
     winston.format((info) => {
-      const logInfo = { ...info }
       if (logger?.debug && info.stack) {
-        logInfo.stacktrace = info.stack
+        info.stacktrace = info.stack
       }
-      return logInfo
+      return info
     })(),
     winston.format(
       stackDriver({ level: logger?.level, defaultLevel })

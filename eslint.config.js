@@ -20,7 +20,8 @@ export default [
       ...plugins
     },
     rules: {
-      ...rules.all
+      ...rules.all,
+      'no-param-reassign': 'off'
     },
     files: ['**/*.js']
   }
