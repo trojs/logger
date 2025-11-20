@@ -12,7 +12,9 @@ export default ({ winston, logger }) => {
       }
       return logInfo
     })(),
-    winston.format(stackDriver({ level: logger?.level, defaultLevel }))(),
+    winston.format(
+      stackDriver({ level: logger?.level, defaultLevel })
+    )(),
     winston.format.json()
   )
 
