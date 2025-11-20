@@ -5,17 +5,20 @@ export default ({ winston, logger }) => {
 
   const jsonFormatter = winston.format.combine(
     winston.format.errors({ stack: logger?.debug ?? false }),
-    winston.format(
-      stackDriver({ level: logger?.level, defaultLevel })
-    )(),
+    winston.format((info) => {
+      const logInfo = { ...info }
+      if (logger?.debug && info.stack) {
+        logInfo.stacktrace = info.stack
+      }
+      return logInfo
+    })(),
+    winston.format(stackDriver({ level: logger?.level, defaultLevel }))(),
     winston.format.json()
   )
 
-  const simpleLoggerWithStack = winston.format.printf((info) => {
-    if (logger?.debug && info.stack) {
-      return `${info.level}: ${info.stack}`
-    }
-    return `${info.level}: ${info.message}`
+  const simpleLoggerWithStack = winston.format.printf(({ timestamp, level, message, stack }) => {
+    const text = `${timestamp} ${level.toUpperCase()} ${message}`
+    return stack ? `${text}\n${stack}` : text
   })
 
   const defaultFormatter = winston.format.combine(
