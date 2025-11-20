@@ -10,6 +10,10 @@ export default ({ winston, logger }) => {
         info.message = info instanceof Error
           ? info.toString()
           : JSON.stringify(info)
+      } else if (info.message instanceof Error) {
+        info.message = info.message.toString()
+      } else if (typeof info.message !== 'string') {
+        info.message = JSON.stringify(info.message)
       }
       if (logger?.debug && info.stack) {
         info.stacktrace = info.stack
