@@ -6,6 +6,9 @@ export default ({ winston, logger }) => {
   const jsonFormatter = winston.format.combine(
     winston.format.errors({ stack: logger?.debug ?? false }),
     winston.format((info) => {
+      if (!info.message) {
+        info.message = info.message || info.toString()
+      }
       if (logger?.debug && info.stack) {
         info.stacktrace = info.stack
       }
@@ -24,6 +27,12 @@ export default ({ winston, logger }) => {
 
   const defaultFormatter = winston.format.combine(
     winston.format.errors({ stack: logger?.debug ?? false }),
+    winston.format((info) => {
+      if (!info.message && info instanceof Error) {
+        info.message = info.toString()
+      }
+      return info
+    })(),
     simpleLoggerWithStack
   )
 

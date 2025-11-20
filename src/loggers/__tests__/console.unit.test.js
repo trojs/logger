@@ -112,4 +112,16 @@ test('Test the console logger', async (t) => {
     const MESSAGE = Symbol.for('message')
     assert.ok(!formatted[MESSAGE].includes(err.stack.split('\n')[0]))
   })
+
+  await t.test('It should include stacktrace (json)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', debug: true, level: 'error' }
+    })
+    const err = new Error('missing stack?')
+    err.level = 'error'
+    const formatted = transport.format.transform(err, {})
+    assert.ok(formatted.stacktrace)
+    assert.strictEqual(formatted.message, 'missing stack?')
+  })
 })
