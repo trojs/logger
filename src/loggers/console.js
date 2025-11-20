@@ -26,7 +26,7 @@ export default ({ winston, logger }) => {
       return info
     })(),
     winston.format(
-        stackDriver({ level: logger?.level, defaultLevel })
+      stackDriver({ level: logger?.level, defaultLevel })
     )(),
     winston.format.json()
   )
@@ -55,7 +55,7 @@ export default ({ winston, logger }) => {
     handleRejections: true,
     format:
     logger?.format === 'json'
-    ? jsonFormatter
-    : defaultFormatter
+      ? jsonFormatter
+      : defaultFormatter
   })
 }
