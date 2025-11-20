@@ -5,21 +5,34 @@ export default ({ winston, logger }) => {
 
   const jsonFormatter = winston.format.combine(
     winston.format.errors({ stack: logger?.debug ?? false }),
+    winston.format((info) => {
+      const logInfo = { ...info }
+      if (logger?.debug && info.stack) {
+        logInfo.stacktrace = info.stack
+      }
+      return logInfo
+    })(),
     winston.format(
       stackDriver({ level: logger?.level, defaultLevel })
     )(),
     winston.format.json()
   )
 
+  const simpleLoggerWithStack = winston.format.printf(({ level, message, stack }) => {
+    const text = `${level.toUpperCase()}: ${message}`
+    return stack ? `${text}\n${stack}` : text
+  })
+
   const defaultFormatter = winston.format.combine(
     winston.format.errors({ stack: logger?.debug ?? false }),
-    winston.format.simple()
+    simpleLoggerWithStack
   )
+
   return new winston.transports.Console({
     level: logger?.level || defaultLevel,
     format:
-            logger.format === 'json'
-              ? jsonFormatter
-              : defaultFormatter
+    logger?.format === 'json'
+      ? jsonFormatter
+      : defaultFormatter
   })
 }
