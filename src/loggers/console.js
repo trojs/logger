@@ -18,8 +18,8 @@ export default ({ winston, logger }) => {
     winston.format.json()
   )
 
-  const simpleLoggerWithStack = winston.format.printf(({ timestamp, level, message, stack }) => {
-    const text = `${timestamp} ${level.toUpperCase()} ${message}`
+  const simpleLoggerWithStack = winston.format.printf(({ level, message, stack }) => {
+    const text = `${level.toUpperCase()}: ${message}`
     return stack ? `${text}\n${stack}` : text
   })
 
