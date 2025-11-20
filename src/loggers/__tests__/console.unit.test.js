@@ -80,4 +80,36 @@ test('Test the console logger', async (t) => {
     assert.strictEqual(typeof formatted.severity, 'string')
     assert.strictEqual(typeof formatted.level, 'number')
   })
+
+  await t.test('It should include stack (simple format) when debug=true', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: {
+        type: 'console',
+        debug: true,
+        level: 'error' // level needed to pass transport filter
+      }
+    })
+    const err = new Error('simple boom')
+    err.level = 'error'
+    const formatted = transport.format.transform(err, {})
+    const MESSAGE = Symbol.for('message')
+    assert.ok(formatted[MESSAGE].includes(err.stack.split('\n')[0]))
+  })
+
+  await t.test('It should NOT include stack (simple format) when debug=false', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: {
+        type: 'console',
+        debug: false,
+        level: 'error'
+      }
+    })
+    const err = new Error('simple boom 2')
+    err.level = 'error'
+    const formatted = transport.format.transform(err, {})
+    const MESSAGE = Symbol.for('message')
+    assert.ok(!formatted[MESSAGE].includes(err.stack.split('\n')[0]))
+  })
 })
