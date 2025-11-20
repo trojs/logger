@@ -8,10 +8,8 @@ export default ({ winston, logger }) => {
     winston.format((info) => {
       if (!info.message) {
         if (info instanceof Error) {
-          // Prefer the raw message; fall back to toString
           info.message = info.message || info.toString()
         } else {
-          // Avoid {"level":"error"} as a message if level is the only key
           const clone = { ...info }
           delete clone.level
           const keys = Object.keys(clone)
@@ -28,7 +26,7 @@ export default ({ winston, logger }) => {
       return info
     })(),
     winston.format(
-      stackDriver({ level: logger?.level, defaultLevel })
+        stackDriver({ level: logger?.level, defaultLevel })
     )(),
     winston.format.json()
   )
@@ -41,8 +39,10 @@ export default ({ winston, logger }) => {
   const defaultFormatter = winston.format.combine(
     winston.format.errors({ stack: logger?.debug ?? false }),
     winston.format((info) => {
-      if (!info.message && info instanceof Error) {
-        info.message = info.toString()
+      if (info instanceof Error) {
+        info.message = info.message || info.toString()
+      } else if (!info.message) {
+        info.message = ''
       }
       return info
     })(),
@@ -51,9 +51,11 @@ export default ({ winston, logger }) => {
 
   return new winston.transports.Console({
     level: logger?.level || defaultLevel,
+    handleExceptions: true,
+    handleRejections: true,
     format:
     logger?.format === 'json'
-      ? jsonFormatter
-      : defaultFormatter
+    ? jsonFormatter
+    : defaultFormatter
   })
 }
