@@ -29,7 +29,7 @@ export default ({ winston, logger }) => {
   return new winston.transports.Console({
     level: logger?.level || defaultLevel,
     format:
-    logger.format === 'json'
+    logger?.format === 'json'
       ? jsonFormatter
       : defaultFormatter
   })
