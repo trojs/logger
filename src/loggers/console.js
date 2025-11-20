@@ -7,7 +7,13 @@ export default ({ winston, logger }) => {
     winston.format.errors({ stack: logger?.debug ?? false }),
     winston.format((info) => {
       if (!info.message) {
-        info.message = info.message || info.toString()
+        info.message = info instanceof Error
+          ? info.toString()
+          : JSON.stringify(info)
+      } else if (info.message instanceof Error) {
+        info.message = info.message.toString()
+      } else if (typeof info.message !== 'string') {
+        info.message = JSON.stringify(info.message)
       }
       if (logger?.debug && info.stack) {
         info.stacktrace = info.stack

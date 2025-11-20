@@ -124,4 +124,64 @@ test('Test the console logger', async (t) => {
     assert.ok(formatted.stacktrace)
     assert.strictEqual(formatted.message, 'missing stack?')
   })
+
+  await t.test('It should set Error message using toString() (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', debug: true, level: 'error' }
+    })
+    const err = new Error('custom boom')
+    err.level = 'error'
+    const formatted = transport.format.transform(err, {})
+    assert.strictEqual(formatted.message, 'custom boom')
+  })
+
+  await t.test('It should JSON stringify plain object without message (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', debug: true, level: 'info' }
+    })
+    const infoObj = { level: 'info', foo: 'bar', answer: 42 }
+    const formatted = transport.format.transform(infoObj, {})
+    assert.strictEqual(formatted.message, '{"level":"info","foo":"bar","answer":42}')
+  })
+
+  await t.test('It should transform message Error instance (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false }
+    })
+    const innerErr = new Error('inner boom')
+    const formatted = transport.format.transform({ level: 'info', message: innerErr }, {})
+    assert.strictEqual(formatted.message, 'inner boom')
+  })
+
+  await t.test('It should JSON stringify non-string message object (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false }
+    })
+    const msgObj = { foo: 'bar', answer: 42 }
+    const formatted = transport.format.transform({ level: 'info', message: msgObj }, {})
+    assert.strictEqual(formatted.message, JSON.stringify(msgObj))
+  })
+
+  await t.test('It should JSON stringify non-string message (array) (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false }
+    })
+    const arr = [1, 2, 3]
+    const formatted = transport.format.transform({ level: 'info', message: arr }, {})
+    assert.strictEqual(formatted.message, JSON.stringify(arr))
+  })
+
+  await t.test('It should JSON stringify non-string message (number) (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false }
+    })
+    const formatted = transport.format.transform({ level: 'info', message: 123 }, {})
+    assert.strictEqual(formatted.message, JSON.stringify(123))
+  })
 })
