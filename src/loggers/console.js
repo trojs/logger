@@ -4,6 +4,7 @@ const SYMBOL_MESSAGE = Symbol.for('message')
 
 export default ({ winston, logger }) => {
   const defaultLevel = 'trace'
+  const stackTrace = logger?.debug ?? false
 
   const stackHead = (stack) =>
     stack ? (stack.split('\n')[0] || '').trim() : ''
@@ -104,7 +105,7 @@ export default ({ winston, logger }) => {
 
   const jsonFormatter = winston.format.combine(
     ensureErrorProps(),
-    winston.format.errors({ stack: true }),
+    winston.format.errors({ stack: stackTrace }),
     normalizeMessage(),
     winston.format(stackDriver({ level: logger?.level, defaultLevel }))(),
     winston.format.json()
@@ -112,7 +113,7 @@ export default ({ winston, logger }) => {
 
   const simpleFormatter = winston.format.combine(
     ensureErrorProps(),
-    winston.format.errors({ stack: true }),
+    winston.format.errors({ stack: stackTrace }),
     normalizeMessage(),
     winston.format.printf(({ level, message, stack }) => {
       const base = `${level}: ${message || stackHead(stack)}`
