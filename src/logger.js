@@ -87,9 +87,11 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) =>
         logger.warn(
           warning instanceof Error
             ? warning
-            : new Error(
-                `${warning.name}: ${warning.message}\n${warning.stack || ''}`
-            )
+            : (
+                new Error(
+                  `${warning.name}: ${warning.message}\n${warning.stack || ''}`
+                )
+              )
         )
       } catch {
         // eslint-disable-next-line no-console
