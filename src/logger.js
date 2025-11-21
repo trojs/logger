@@ -26,7 +26,6 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) =>
     transports: winstonLoggers
   })
 
-  // Wrap a level method to normalize Error instances
   const wrapLevel = (lvl) => {
     const orig = logger[lvl].bind(logger)
     logger[lvl] = (first, ...rest) => {
@@ -34,10 +33,9 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) =>
         const info = {
           level: lvl,
           message: first.message || first.toString(),
-          error: first, // embedded error for formatter
-          stack: first.stack // ensure stack available
+          error: first,
+          stack: first.stack
         }
-        // Merge optional meta object
         if (rest[0] && typeof rest[0] === 'object') {
           Object.assign(info, rest[0])
         }
@@ -68,10 +66,10 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) =>
         = reason instanceof Error
           ? reason
           : new Error(
-            typeof reason === 'string'
-              ? reason
-              : JSON.stringify(reason)
-          )
+              typeof reason === 'string'
+                ? reason
+                : JSON.stringify(reason)
+            )
       try {
         logger.error(err)
       } catch {
@@ -87,7 +85,7 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) =>
             ? warning
             : new Error(
                 `${warning.name}: ${warning.message}\n${warning.stack || ''}`
-            )
+              )
         )
       } catch {
         // eslint-disable-next-line no-console

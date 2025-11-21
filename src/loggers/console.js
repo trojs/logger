@@ -48,6 +48,14 @@ export default ({ winston, logger }) => {
       }
     }
 
+    if (info.message && typeof info.message !== 'string') {
+      try {
+        info.message = JSON.stringify(info.message)
+      } catch {
+        info.message = String(info.message)
+      }
+    }
+
     if (info.stack && (!info.message || info.message === '')) {
       info.message = stackHead(info.stack)
     }
@@ -67,20 +75,6 @@ export default ({ winston, logger }) => {
       info.stacktrace = info.stack
     }
 
-    return info
-  })
-
-  const debugTap = winston.format((info) => {
-    if (!info.__debugTap) {
-      // eslint-disable-next-line no-console
-      console.error('RAW_INFO_BEFORE_JSON', {
-        keys: Object.keys(info),
-        message: info.message,
-        hasStack: !!info.stack,
-        symbolMessage: info[SYMBOL_MESSAGE]
-      })
-      info.__debugTap = true
-    }
     return info
   })
 
