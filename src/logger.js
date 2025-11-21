@@ -16,6 +16,24 @@ const levels = {
   trace: 5
 }
 
+/**
+ * Creates a Winston logger instance with custom log levels and transports.
+ * Also attaches global process event handlers for uncaught exceptions, unhandled rejections, and warnings.
+ *
+ * @param {Object} [options={}] - Logger configuration options.
+ * @param {Array<Object>} [options.loggers=defaultLoggers] - Array of logger transport configurations.
+ * @param {string} [options.level='info'] - Minimum log level for the logger.
+ * @param {Object} [options.meta={}] - Default metadata to include in all log messages.
+ * @returns {LoggerType} Winston logger instance with custom level wrappers.
+ *
+ * @sideeffect Attaches global process event handlers for 'uncaughtException', 'unhandledRejection', and 'warning'.
+ * These handlers will log errors and warnings using the logger, and are only attached once per process.
+ *
+ * @example
+ * import createLogger from './logger.js';
+ * const logger = createLogger({ level: 'debug', meta: { service: 'api' } });
+ * logger.info('Service started');
+ */
 export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) => {
   const winstonLoggers = makeLoggers({ winston, loggers })
 
