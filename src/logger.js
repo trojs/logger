@@ -3,15 +3,9 @@ import makeLoggers from './loggers/index.js'
 
 /**
  * @typedef {import('./models/schemas/logger.js').Logger} LoggerType
- * @typedef {import('./models/enums/level.js').LevelType} LevelType
  */
 
-/** @type {LoggerType[]} */
-const defaultLoggers = [
-  {
-    type: 'console'
-  }
-]
+const defaultLoggers = [{ type: 'console' }]
 
 const levels = {
   fatal: 0,
@@ -22,21 +16,85 @@ const levels = {
   trace: 5
 }
 
-/**
- * Create the logger
- * @param {object} config
- * @param {LoggerType=} config.loggers
- * @param {string?=} config.level
- * @param {object?=} config.meta
- * @returns {winston.Logger}
- */
-export default ({ loggers = defaultLoggers, level = 'info', meta = {} }) => {
+export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) => {
   const winstonLoggers = makeLoggers({ winston, loggers })
 
-  return winston.createLogger({
+  const logger = winston.createLogger({
     level,
     levels,
     defaultMeta: meta,
     transports: winstonLoggers
   })
+
+  // Wrap a level method to normalize Error instances
+  const wrapLevel = (lvl) => {
+    const orig = logger[lvl].bind(logger)
+    logger[lvl] = (first, ...rest) => {
+      if (first instanceof Error) {
+        const info = {
+          level: lvl,
+          message: first.message || first.toString(),
+          error: first, // embedded error for formatter
+          stack: first.stack // ensure stack available
+        }
+        // Merge optional meta object
+        if (rest[0] && typeof rest[0] === 'object') {
+          Object.assign(info, rest[0])
+        }
+        return logger.log(info)
+      }
+      return orig(first, ...rest)
+    }
+  }
+
+  ;['fatal', 'error', 'warn', 'info', 'debug', 'trace'].forEach((lvl) => {
+    if (typeof logger[lvl] === 'function') wrapLevel(lvl)
+  })
+
+  if (!process.__trojsLoggerHandlersAttached) {
+    process.__trojsLoggerHandlersAttached = true
+
+    process.on('uncaughtException', (err) => {
+      try {
+        logger.error(err instanceof Error ? err : new Error(String(err)))
+      } catch {
+        // eslint-disable-next-line no-console
+        console.error('UNCAUGHT_EXCEPTION', err)
+      }
+    })
+
+    process.on('unhandledRejection', (reason) => {
+      const err
+        = reason instanceof Error
+          ? reason
+          : new Error(
+            typeof reason === 'string'
+              ? reason
+              : JSON.stringify(reason)
+          )
+      try {
+        logger.error(err)
+      } catch {
+        // eslint-disable-next-line no-console
+        console.error('UNHANDLED_REJECTION', err)
+      }
+    })
+
+    process.on('warning', (warning) => {
+      try {
+        logger.warn(
+          warning instanceof Error
+            ? warning
+            : new Error(
+                `${warning.name}: ${warning.message}\n${warning.stack || ''}`
+            )
+        )
+      } catch {
+        // eslint-disable-next-line no-console
+        console.warn('PROCESS_WARNING', warning)
+      }
+    })
+  }
+
+  return logger
 }
