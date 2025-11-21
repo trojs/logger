@@ -62,14 +62,18 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) =>
     })
 
     process.on('unhandledRejection', (reason) => {
-      const err
-        = reason instanceof Error
-          ? reason
-          : new Error(
-              typeof reason === 'string'
-                ? reason
-                : JSON.stringify(reason)
-            )
+      let err
+      if (reason instanceof Error) {
+        err = reason
+      } else if (typeof reason === 'string') {
+        err = new Error(reason)
+      } else {
+        try {
+          err = new Error(JSON.stringify(reason))
+        } catch {
+          err = new Error(String(reason))
+        }
+      }
       try {
         logger.error(err)
       } catch {
@@ -85,7 +89,7 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) =>
             ? warning
             : new Error(
                 `${warning.name}: ${warning.message}\n${warning.stack || ''}`
-              )
+            )
         )
       } catch {
         // eslint-disable-next-line no-console

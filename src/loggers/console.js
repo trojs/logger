@@ -15,7 +15,7 @@ export default ({ winston, logger }) => {
     return info
   })
 
-  const normalizeMessage = winston.format((info) => {
+  const extractSymbolMessage = (info) => {
     if (
       (!info.message || info.message === '')
       && info[SYMBOL_MESSAGE]
@@ -30,8 +30,10 @@ export default ({ winston, logger }) => {
         info.message = info[SYMBOL_MESSAGE]
       }
     }
+  }
 
-    const embeddedError
+  const attachEmbeddedError = (info) => {
+    const embedded
       = (info.error instanceof Error && info.error)
         || (info.exception instanceof Error && info.exception)
 
@@ -39,15 +41,23 @@ export default ({ winston, logger }) => {
       if (!info.message || info.message === '') {
         info.message = info.toString()
       }
-    } else if (info.message instanceof Error) {
-      info.message = info.message.message || info.message.toString()
-    } else if (embeddedError) {
-      info.message = embeddedError.message || embeddedError.toString()
-      if (!info.stack && embeddedError.stack) {
-        info.stack = embeddedError.stack
-      }
+      return
     }
 
+    if (info.message instanceof Error) {
+      info.message = info.message.message || info.message.toString()
+      return
+    }
+
+    if (embedded) {
+      info.message = embedded.message || embedded.toString()
+      if (!info.stack && embedded.stack) {
+        info.stack = embedded.stack
+      }
+    }
+  }
+
+  const stringifyNonStringMessage = (info) => {
     if (info.message && typeof info.message !== 'string') {
       try {
         info.message = JSON.stringify(info.message)
@@ -55,11 +65,15 @@ export default ({ winston, logger }) => {
         info.message = String(info.message)
       }
     }
+  }
 
+  const deriveMessageFromStack = (info) => {
     if (info.stack && (!info.message || info.message === '')) {
       info.message = stackHead(info.stack)
     }
+  }
 
+  const finalizeEmptyMessage = (info) => {
     if (!info.message || info.message === '') {
       const clone = { ...info }
       delete clone.level
@@ -70,11 +84,21 @@ export default ({ winston, logger }) => {
       const keys = Object.keys(clone)
       info.message = keys.length > 0 ? JSON.stringify(clone) : ''
     }
+  }
 
+  const duplicateStackTraceIfDebug = (info) => {
     if ((logger?.debug ?? false) && info.stack) {
       info.stacktrace = info.stack
     }
+  }
 
+  const normalizeMessage = winston.format((info) => {
+    extractSymbolMessage(info)
+    attachEmbeddedError(info)
+    stringifyNonStringMessage(info)
+    deriveMessageFromStack(info)
+    finalizeEmptyMessage(info)
+    duplicateStackTraceIfDebug(info)
     return info
   })
 
