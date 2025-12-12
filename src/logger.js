@@ -44,15 +44,24 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) =>
     const orig = logger[lvl].bind(logger)
     logger[lvl] = (first, ...rest) => {
       if (first instanceof Error) {
+        const message = typeof first.message === 'string'
+          ? first.message
+          : (() => {
+              try {
+                return JSON.stringify(first)
+              } catch {
+                return String(first)
+              }
+            })()
         const info = {
+          ...first,
           level: lvl,
-          message: first.message || first.toString(),
+          message: message,
           error: first,
           stack: first.stack
         }
-        if (rest[0] && typeof rest[0] === 'object') {
-          Object.assign(info, rest[0])
-        }
+        const restInfo = Object.assign({}, ...rest.filter((x) => x && typeof x === 'object'))
+        Object.assign(restInfo, info)
         return logger.log(info)
       }
       return orig(first, ...rest)
