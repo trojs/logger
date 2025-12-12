@@ -62,7 +62,7 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) =>
         }
         const restInfo = Object.assign({}, ...rest.filter((x) => x && typeof x === 'object'))
         Object.assign(restInfo, info)
-        return logger.log(info)
+        return logger.log(restInfo)
       }
       return orig(first, ...rest)
     }
