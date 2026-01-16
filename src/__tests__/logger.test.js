@@ -1,8 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert'
 import winston from 'winston'
-import makeLogger from './logger.js'
-import makeConsoleLogger from './loggers/console.js'
+import makeLogger from '../logger.js'
+import makeConsoleLogger from '../loggers/console.js'
 
 test('Test the make loggers', async (t) => {
   await t.test('It should make the loggers', () => {
