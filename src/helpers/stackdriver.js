@@ -19,14 +19,18 @@ const levels = {
 }
 
 const stackdriver
-  = ({ level, defaultLevel }) =>
-    (info) => ({
-      ...info,
-      severity: levelToSeverity[level] || levelToSeverity[defaultLevel],
-      level: levels[level] || levels[defaultLevel],
-      time: Date.now(),
-      pid: process.pid,
-      hostname: os.hostname()
-    })
+  = ({ level = 'info', defaultLevel = 'info' } = {}) =>
+    (info) => {
+      const currentLevel = info?.level ?? level ?? defaultLevel ?? 'info'
+
+      return {
+        ...info,
+        severity: levelToSeverity[currentLevel] || levelToSeverity.info,
+        level: levels[currentLevel] || levels.info,
+        time: Date.now(),
+        pid: process.pid,
+        hostname: os.hostname()
+      }
+    }
 
 export default stackdriver
