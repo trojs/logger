@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+/* eslint sonarjs/cognitive-complexity: ["error", 16] */
 import stackDriver from '../helpers/stackdriver.js'
 
 const SYMBOL_MESSAGE = Symbol.for('message')
