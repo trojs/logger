@@ -21,6 +21,7 @@ test('Test the console logger', async (t) => {
     assert.strictEqual(logger.filename, undefined)
     assert.strictEqual(logger.options, undefined)
   })
+
   await t.test('It should make the json console logger', () => {
     const logger = makeConsoleLogger({
       winston,
@@ -87,7 +88,7 @@ test('Test the console logger', async (t) => {
       logger: {
         type: 'console',
         debug: true,
-        level: 'error' // level needed to pass transport filter
+        level: 'error'
       }
     })
     const err = new Error('simple boom')
@@ -183,5 +184,104 @@ test('Test the console logger', async (t) => {
     })
     const formatted = transport.format.transform({ level: 'info', message: 123 }, {})
     assert.strictEqual(formatted.message, JSON.stringify(123))
+  })
+
+  await t.test('It should handle circular references with safeJsonReplacer (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false }
+    })
+    const circular = { level: 'info', message: 'test' }
+    circular.self = circular
+    const formatted = transport.format.transform(circular, {})
+    const MESSAGE = Symbol.for('message')
+    assert.ok(formatted[MESSAGE])
+    assert.ok(formatted[MESSAGE].includes('[Circular]'))
+  })
+
+  await t.test('It should truncate long strings with safeJsonReplacer (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false }
+    })
+    const longString = 'a'.repeat(1500)
+    const info = { level: 'info', message: 'test', data: longString }
+    const formatted = transport.format.transform(info, {})
+    const MESSAGE = Symbol.for('message')
+    assert.ok(formatted[MESSAGE])
+    assert.ok(formatted[MESSAGE].includes('[truncated]'))
+  })
+
+  await t.test('It should handle functions with safeJsonReplacer (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false }
+    })
+    const info = { level: 'info', message: 'test', fn: () => 'hello' }
+    const formatted = transport.format.transform(info, {})
+    const MESSAGE = Symbol.for('message')
+    assert.ok(formatted[MESSAGE])
+    assert.ok(formatted[MESSAGE].includes('[Function]'))
+  })
+
+  await t.test('It should limit depth with safeJsonReplacer (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false }
+    })
+    // Create deeper nesting - need more than 5 levels
+    const deep = {
+      level: 'info',
+      message: 'test',
+      a: {
+        b: {
+          c: {
+            d: {
+              e: {
+                f: {
+                  g: {
+                    h: 'way too deep'
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    const formatted = transport.format.transform(deep, {})
+    const MESSAGE = Symbol.for('message')
+    assert.ok(formatted[MESSAGE])
+    assert.ok(formatted[MESSAGE].includes('[Max Depth Exceeded]'))
+  })
+
+  await t.test('It should handle serialization errors gracefully (json format)', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false }
+    })
+    // Create object that will fail normal JSON.stringify
+    const problematic = { level: 'info', message: 'test' }
+    // Override toJSON to throw
+    problematic.toJSON = () => {
+      throw new Error('Serialization fail')
+    }
+    const formatted = transport.format.transform(problematic, {})
+    const MESSAGE = Symbol.for('message')
+    assert.ok(formatted[MESSAGE])
+    // Should have fallback serialization
+    assert.ok(formatted.message === 'test' || formatted.error)
+  })
+
+  await t.test('It should preserve Symbol(message) in json formatter', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false }
+    })
+    const info = { level: 'info', message: 'test message' }
+    const formatted = transport.format.transform(info, {})
+    const MESSAGE = Symbol.for('message')
+    assert.ok(formatted[MESSAGE])
+    assert.strictEqual(typeof formatted[MESSAGE], 'string')
   })
 })
