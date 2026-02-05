@@ -1,7 +1,53 @@
 /* eslint-disable no-param-reassign */
+/* eslint sonarjs/cognitive-complexity: ["error", 16] */
 import stackDriver from '../helpers/stackdriver.js'
 
 const SYMBOL_MESSAGE = Symbol.for('message')
+
+const safeJsonReplacer = (maxDepth = 5, maxStringLength = 1000) => {
+  const parentMap = new WeakMap()
+  const depthMap = new WeakMap()
+
+  return function (key, value) {
+    // Handle circular references and depth tracking
+    if (typeof value === 'object' && value !== null) {
+      // Detect cycles by walking up the parent chain
+      let current = this
+      while (current && typeof current === 'object') {
+        if (current === value) {
+          return '[Circular]'
+        }
+        current = parentMap.get(current)
+      }
+
+      // Record parent for this value
+      if (this && typeof this === 'object') {
+        parentMap.set(value, this)
+      }
+      // Track depth per object
+      const parentDepth = depthMap.get(this) || 0
+      const currentDepth = parentDepth + 1
+
+      if (currentDepth > maxDepth) {
+        return '[Max Depth Exceeded]'
+      }
+
+      depthMap.set(value, currentDepth)
+    }
+
+    // Truncate long strings
+    if (typeof value === 'string' && value.length > maxStringLength) {
+      return `${value.substring(0, maxStringLength)}... [truncated]`
+    }
+
+    // Handle functions
+    if (typeof value === 'function') {
+      return '[Function]'
+    }
+
+    return value
+  }
+}
 
 export default ({ winston, logger }) => {
   const defaultLevel = 'trace'
@@ -109,7 +155,33 @@ export default ({ winston, logger }) => {
     winston.format.errors({ stack: stackTrace }),
     normalizeMessage(),
     winston.format(stackDriver({ level: logger?.level, defaultLevel }))(),
-    winston.format.json()
+    winston.format((info) => {
+      // Safe JSON serialization with error handling
+      try {
+        const serialized = JSON.stringify(info, safeJsonReplacer(5, 1000))
+        return { ...info, [SYMBOL_MESSAGE]: serialized }
+      } catch (error) {
+        // Fallback for serialization errors
+        let safeSymbolMessage
+        try {
+          const fallbackPayload = {
+            message: info?.message,
+            level: info?.level,
+            error: 'Failed to serialize log entry'
+          }
+          safeSymbolMessage = JSON.stringify(fallbackPayload, safeJsonReplacer(2, 500))
+        } catch {
+          safeSymbolMessage = '{"error":"Failed to serialize log entry"}'
+        }
+
+        return {
+          level: info?.level,
+          message: info?.message || 'Serialization error',
+          error: error?.message || 'Unknown serialization error',
+          [SYMBOL_MESSAGE]: safeSymbolMessage
+        }
+      }
+    })()
   )
 
   const simpleFormatter = winston.format.combine(
