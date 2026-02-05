@@ -4,17 +4,25 @@ import stackDriver from '../helpers/stackdriver.js'
 const SYMBOL_MESSAGE = Symbol.for('message')
 
 const safeJsonReplacer = (maxDepth = 5, maxStringLength = 1000) => {
-  const seen = new WeakSet()
+  const parentMap = new WeakMap()
   const depthMap = new WeakMap()
 
   return function (key, value) {
-    // Handle circular references
+    // Handle circular references and depth tracking
     if (typeof value === 'object' && value !== null) {
-      if (seen.has(value)) {
-        return '[Circular]'
+      // Detect cycles by walking up the parent chain
+      let current = this
+      while (current && typeof current === 'object') {
+        if (current === value) {
+          return '[Circular]'
+        }
+        current = parentMap.get(current)
       }
-      seen.add(value)
 
+      // Record parent for this value
+      if (this && typeof this === 'object') {
+        parentMap.set(value, this)
+      }
       // Track depth per object
       const parentDepth = depthMap.get(this) || 0
       const currentDepth = parentDepth + 1
