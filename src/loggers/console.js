@@ -147,21 +147,29 @@ export default ({ winston, logger }) => {
     normalizeMessage(),
     winston.format(stackDriver({ level: logger?.level, defaultLevel }))(),
     winston.format((info) => {
-    // Safe JSON serialization with error handling
+      // Safe JSON serialization with error handling
       try {
         const serialized = JSON.stringify(info, safeJsonReplacer(5, 1000))
         return { ...info, [SYMBOL_MESSAGE]: serialized }
       } catch (error) {
-      // Fallback for serialization errors
-        return {
-          ...info,
-          message: info.message || 'Serialization error',
-          error: error.message,
-          [SYMBOL_MESSAGE]: JSON.stringify({
-            message: info.message,
-            level: info.level,
+        // Fallback for serialization errors
+        let safeSymbolMessage
+        try {
+          const fallbackPayload = {
+            message: info?.message,
+            level: info?.level,
             error: 'Failed to serialize log entry'
-          })
+          }
+          safeSymbolMessage = JSON.stringify(fallbackPayload, safeJsonReplacer(2, 500))
+        } catch {
+          safeSymbolMessage = '{"error":"Failed to serialize log entry"}'
+        }
+
+        return {
+          level: info?.level,
+          message: info?.message || 'Serialization error',
+          error: error?.message || 'Unknown serialization error',
+          [SYMBOL_MESSAGE]: safeSymbolMessage
         }
       }
     })()
