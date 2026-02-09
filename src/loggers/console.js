@@ -158,7 +158,7 @@ export default ({ winston, logger }) => {
     winston.format((info) => {
       // Safe JSON serialization with error handling
       try {
-        const serialized = JSON.stringify(info, safeJsonReplacer(5, 1000))
+        const serialized = JSON.stringify(info, safeJsonReplacer(logger?.maxDepth || 5, logger?.maxStringLength || 1000))
         return { ...info, [SYMBOL_MESSAGE]: serialized }
       } catch (error) {
         // Fallback for serialization errors

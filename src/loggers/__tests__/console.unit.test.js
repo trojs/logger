@@ -284,4 +284,44 @@ test('Test the console logger', async (t) => {
     assert.ok(formatted[MESSAGE])
     assert.strictEqual(typeof formatted[MESSAGE], 'string')
   })
+
+  await t.test('It should use custom maxDepth configuration', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false, maxDepth: 3 }
+    })
+    // Create nesting with exactly 4 levels (beyond maxDepth of 3)
+    const deep = {
+      level: 'info',
+      message: 'test',
+      a: {
+        b: {
+          c: {
+            d: 'should be truncated'
+          }
+        }
+      }
+    }
+    const formatted = transport.format.transform(deep, {})
+    const MESSAGE = Symbol.for('message')
+    assert.ok(formatted[MESSAGE])
+    assert.ok(formatted[MESSAGE].includes('[Max Depth Exceeded]'))
+  })
+
+  await t.test('It should use custom maxStringLength configuration', () => {
+    const transport = makeConsoleLogger({
+      winston,
+      logger: { type: 'console', format: 'json', level: 'info', debug: false, maxStringLength: 50 }
+    })
+    const longString = 'a'.repeat(100)
+    const info = { level: 'info', message: 'test', data: longString }
+    const formatted = transport.format.transform(info, {})
+    const MESSAGE = Symbol.for('message')
+    assert.ok(formatted[MESSAGE])
+    assert.ok(formatted[MESSAGE].includes('[truncated]'))
+    // Verify it was truncated at 50 characters, not default 1000
+    const parsed = JSON.parse(formatted[MESSAGE])
+    assert.ok(parsed.data.length < 100)
+    assert.ok(parsed.data.includes('...'))
+  })
 })

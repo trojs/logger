@@ -19,6 +19,8 @@ import Level from '../enums/level.js'
  * @property {number=} sampleRate
  * @property {number=} tracesSampleRate
  * @property {string=} format
+ * @property {number=} maxDepth
+ * @property {number=} maxStringLength
  */
 
 export default {
@@ -33,5 +35,7 @@ export default {
   'debug?': Boolean,
   'sampleRate?': Number,
   'tracesSampleRate?': Number,
-  'format?': String
+  'format?': String,
+  'maxDepth?': Number,
+  'maxStringLength?': Number
 }
