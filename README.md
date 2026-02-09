@@ -1,4 +1,5 @@
 # logger
+
 Generic logger with intergrations for e.g. Sentry
 
 ```javascript
@@ -32,17 +33,18 @@ default: info
 
 Log only if [`info.level`](#streams-objectmode-and-info-objects) less than or equal to this level
 
-More info see: https://www.npmjs.com/package/winston#logging-levels
+More info see: <https://www.npmjs.com/package/winston#logging-levels>
 
 # service
 
 default: user-service
 
-# Loggers:
+# Loggers
 
 Set of logging targets for `info` messages
 
 default:
+
 ```javascript
 [
   {
@@ -53,15 +55,15 @@ default:
 
 Types:
 
- * sentry
- * errorFile
- * combinedFile
- * console
+* sentry
+* errorFile
+* combinedFile
+* console
 
 The default loggers are overruled by the loggers in the `loggers` array.
 
 It use winston transports for all logger types.
-More info see: https://www.npmjs.com/package/winston#transports
+More info see: <https://www.npmjs.com/package/winston#transports>
 
 ## sentry
 
@@ -78,11 +80,11 @@ DSN:
 
 The DSN tells the SDK where to send the events. If this value is not provided, the SDK will try to read it from the SENTRY_DSN environment variable. If that variable also does not exist, the SDK will just not send any events.
 
-More info: 
+More info:
 
-* https://github.com/aandrewww/winston-transport-sentry-node
-* https://docs.sentry.io/platforms/node/
-* https://docs.sentry.io/platforms/javascript/
+* <https://github.com/aandrewww/winston-transport-sentry-node>
+* <https://docs.sentry.io/platforms/node/>
+* <https://docs.sentry.io/platforms/javascript/>
 
 ## errorFile
 
@@ -98,3 +100,5 @@ More info:
 * level (default: trace)
 * debug (default: false, stacktrace in console)
 * format (default: simple, also possible to set to json which is useful for different log systems)
+* maxDepth (default: 5, maximum depth for nested objects in JSON format)
+* maxStringLength (default: 1000, maximum length for strings before truncation in JSON format)
