@@ -29,6 +29,7 @@ const levels = {
  * @param {Array<{[key: string]: string}>} [options.loggers=defaultLoggers] - Array of logger transport configurations.
  * @param {string} [options.level='info'] - Minimum log level for the logger.
  * @param {object} [options.meta={}] - Default metadata to include in all log messages.
+ * @param {boolean} [options.exitOnError=false] - Whether the logger should exit on error.
  * @returns {LoggerType} Winston logger instance with custom level wrappers.
  * These handlers will log errors and warnings using the logger, and are only attached once per process.
  * @example
@@ -36,14 +37,15 @@ const levels = {
  * const logger = createLogger({ level: 'debug', meta: { service: 'api' } });
  * logger.info('Service started');
  */
-export default ({ loggers = defaultLoggers, level = 'info', meta = {} } = {}) => {
+export default ({ loggers = defaultLoggers, level = 'info', meta = {}, exitOnError = false } = {}) => {
   const winstonLoggers = makeLoggers({ winston, loggers })
 
   const logger = winston.createLogger({
     level,
     levels,
     defaultMeta: meta,
-    transports: winstonLoggers
+    transports: winstonLoggers,
+    exitOnError
   })
 
   const wrapLevel = (lvl) => {
