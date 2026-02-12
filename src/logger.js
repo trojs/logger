@@ -83,38 +83,13 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {}, exitOnErr
     if (typeof logger[lvl] === 'function') wrapLevel(lvl)
   })
 
+  // Winston handles uncaughtException and unhandledRejection via transport
+  // handleExceptions and handleRejections options.
+  // exitOnError controls whether the process exits after logging.
+
+  // Only attach warning handler (not handled by Winston transports)
   if (!process.__trojsLoggerHandlersAttached) {
     process.__trojsLoggerHandlersAttached = true
-
-    process.on('uncaughtException', (err) => {
-      try {
-        logger.error(err instanceof Error ? err : new Error(String(err)))
-      } catch {
-        // eslint-disable-next-line no-console
-        console.error('UNCAUGHT_EXCEPTION', err)
-      }
-    })
-
-    process.on('unhandledRejection', (reason) => {
-      let err
-      if (reason instanceof Error) {
-        err = reason
-      } else if (typeof reason === 'string') {
-        err = new Error(reason)
-      } else {
-        try {
-          err = new Error(JSON.stringify(reason))
-        } catch {
-          err = new Error(String(reason))
-        }
-      }
-      try {
-        logger.error(err)
-      } catch {
-        // eslint-disable-next-line no-console
-        console.error('UNHANDLED_REJECTION', err)
-      }
-    })
 
     process.on('warning', (warning) => {
       try {
