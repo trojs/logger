@@ -85,6 +85,26 @@ export class SentryTransport extends TransportStream {
 
     const sentryLevel = this.levelsMap[winstonLevel]
 
+    // Normalize message to string
+    let normalizedMessage = message
+    if (!normalizedMessage || normalizedMessage === '') {
+      // Try to get message from stack or error
+      if (meta.stack) {
+        normalizedMessage = (meta.stack.split('\n')[0] || '').trim()
+      } else if (meta.error instanceof Error) {
+        normalizedMessage = meta.error.message || meta.error.toString()
+      } else {
+        normalizedMessage = 'Empty log message'
+      }
+    } else if (typeof normalizedMessage !== 'string') {
+      // Stringify non-string messages
+      try {
+        normalizedMessage = JSON.stringify(normalizedMessage)
+      } catch {
+        normalizedMessage = String(normalizedMessage)
+      }
+    }
+
     return Sentry.withScope((scope) => {
       if (tags !== undefined && SentryTransport.isObject(tags)) {
         scope.setTags(tags)
@@ -100,11 +120,11 @@ export class SentryTransport extends TransportStream {
       if (SentryTransport.shouldLogException(sentryLevel)) {
         const error
           = Object.values(info).find((value) => value instanceof Error)
-            ?? new ExtendedError(info)
+            ?? new ExtendedError({ ...info, message: normalizedMessage })
         Sentry.captureException(error, { tags, level: sentryLevel })
       } else {
         // Capturing Messages
-        Sentry.captureMessage(message, sentryLevel)
+        Sentry.captureMessage(normalizedMessage, sentryLevel)
       }
     })
   }
