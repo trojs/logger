@@ -5,6 +5,7 @@ import makeLogger from '../logger.js'
 test('Test the make loggers', async (t) => {
   await t.test('It should make the loggers', () => {
     const logger = makeLogger({
+      exitOnError: true,
       loggers: [
         {
           type: 'console'
@@ -51,7 +52,7 @@ test('Test the make loggers', async (t) => {
     assert.strictEqual(logger.readable, true)
     assert.strictEqual(logger.allowHalfOpen, true)
     assert.deepEqual(logger.defaultMeta, {})
-    assert.strictEqual(logger.exitOnError, true)
+    assert.strictEqual(logger.exitOnError, false)
     assert.deepEqual(logger.format, {
       options: {}
     })
