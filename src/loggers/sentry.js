@@ -11,7 +11,9 @@ export default ({ logger }) => {
       sampleRate: logger?.sampleRate || 1,
       tracesSampleRate: logger?.tracesSampleRate || 1
     },
-    level: logger?.level || 'info'
+    level: logger?.level || 'info',
+    handleExceptions: true,
+    handleRejections: true
   }
 
   return new SentryTransport(options)
