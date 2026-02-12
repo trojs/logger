@@ -132,3 +132,4 @@ dist
 # Linting report
 report.json
 report/
+test.test

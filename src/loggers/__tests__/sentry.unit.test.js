@@ -1,7 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert'
 import winston from 'winston'
-import { LEVEL } from 'triple-beam'
 import makeSentryLogger from '../sentry.js'
 import { SentryTransport } from '../winston-transport-sentry-node.js'
 
