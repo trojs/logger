@@ -2,8 +2,8 @@ import test from 'node:test'
 import assert from 'node:assert'
 import winston from 'winston'
 import makeSentryLogger from '../sentry.js'
-import { SentryTransport } from '../winston-transport-sentry-node.js'
 
+const defaultErrorMessage = 'Empty log message'
 test('Test the sentry logger', async (t) => {
   await t.test(
     'It should make the sentry logger with default settings',
@@ -76,7 +76,7 @@ test('Test SentryTransport message normalization', async (t) => {
       } else if (meta.error instanceof Error) {
         normalizedMessage = meta.error.message || meta.error.toString()
       } else {
-        normalizedMessage = 'Empty log message'
+        normalizedMessage = defaultErrorMessage
       }
     } else if (typeof normalizedMessage !== 'string') {
       // Stringify non-string messages
@@ -111,17 +111,17 @@ test('Test SentryTransport message normalization', async (t) => {
 
   await t.test('It should handle empty string messages', () => {
     const result = testMessageNormalization('')
-    assert.strictEqual(result, 'Empty log message')
+    assert.strictEqual(result, defaultErrorMessage)
   })
 
   await t.test('It should handle null messages', () => {
     const result = testMessageNormalization(null)
-    assert.strictEqual(result, 'Empty log message')
+    assert.strictEqual(result, defaultErrorMessage)
   })
 
   await t.test('It should handle undefined messages', () => {
     const result = testMessageNormalization(undefined)
-    assert.strictEqual(result, 'Empty log message')
+    assert.strictEqual(result, defaultErrorMessage)
   })
 
   await t.test('It should extract message from stack trace when message is empty', () => {
@@ -188,13 +188,13 @@ test('Test SentryTransport message normalization', async (t) => {
   await t.test('It should handle false boolean messages', () => {
     const result = testMessageNormalization(false)
     // false is falsy so it's treated as empty
-    assert.strictEqual(result, 'Empty log message')
+    assert.strictEqual(result, defaultErrorMessage)
   })
 
   await t.test('It should handle zero number messages', () => {
     const result = testMessageNormalization(0)
     // 0 is falsy so it's treated as empty
-    assert.strictEqual(result, 'Empty log message')
+    assert.strictEqual(result, defaultErrorMessage)
   })
 
   await t.test('It should handle empty array messages', () => {
