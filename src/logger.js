@@ -52,28 +52,44 @@ export default ({ loggers = defaultLoggers, level = 'info', meta = {}, exitOnErr
     const orig = logger[lvl].bind(logger)
     logger[lvl] = (first, ...rest) => {
       if (first instanceof Error) {
-        const message = typeof first.message === 'string'
-          ? first.message
-          : (() => {
-              try {
-                return JSON.stringify(first)
-              } catch {
-                return String(first)
-              }
-            })()
+        try {
+          const message = typeof first.message === 'string'
+            ? first.message
+            : (() => {
+                try {
+                  return JSON.stringify(first)
+                } catch {
+                  return String(first)
+                }
+              })()
 
-        const restInfo = Object.assign(
-          {},
-          ...rest.filter((x) => x && typeof x === 'object')
-        )
-        const info = {
-          ...restInfo,
-          level: lvl,
-          message: message,
-          error: first,
-          stack: first.stack
+          const restInfo = Object.assign(
+            {},
+            ...rest.filter((x) => x && typeof x === 'object')
+          )
+          const info = {
+            ...restInfo,
+            level: lvl,
+            message,
+            error: first,
+            stack: first.stack
+          }
+          return logger.log(info)
+        } catch (wrapError) {
+          // Fallback: log with minimal safe data if wrapping fails
+          try {
+            return logger.log({
+              level: lvl,
+              message: first.message || String(first),
+              error: first,
+              stack: first.stack,
+              wrapError: wrapError.message
+            })
+          } catch {
+            // Last resort: use original logger without wrapping
+            return orig(first)
+          }
         }
-        return logger.log(info)
       }
       return orig(first, ...rest)
     }
